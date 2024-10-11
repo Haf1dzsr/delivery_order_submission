@@ -21,4 +21,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/approver', [App\Http\Controllers\Approver\DashboardController::class, 'index'])->name('approver.index');
     Route::get('/creator', [App\Http\Controllers\Creator\DashboardController::class, 'index'])->name('creator.index');
 
+
+    Route::resource('delivery-orders', App\Http\Controllers\Creator\DeliveryOrderController::class)->middleware(CreatorHandler::class);
 });

@@ -1,4 +1,4 @@
-@extends('layouts.app-stisla')
+@extends('layouts.app-creator')
 
 @section('title', 'General Dashboard')
 

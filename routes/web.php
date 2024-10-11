@@ -23,4 +23,6 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::resource('delivery-orders', App\Http\Controllers\Creator\DeliveryOrderController::class)->middleware(CreatorHandler::class);
+    Route::patch('delivery-orders/{delivery_order}/update-approval-status', [App\Http\Controllers\Creator\DeliveryOrderController::class, 'updateApprovalStatus'])->name('delivery-orders.updateApprovalStatus')->middleware(CreatorHandler::class);
+    // Route::put('delivery-orders/{id}/update-approval-status', [App\Http\Controllers\Creator\DeliveryOrderController::class, 'updateApprovalStatus'])->name('delivery-orders.updateApprovalStatus')->middleware(CreatorHandler::class);
 });

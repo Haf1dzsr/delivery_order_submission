@@ -41,17 +41,7 @@
                             </div>
                             <div class="card-body">
                                 
-                                {{-- !search --}}
-                                {{-- <div class="float-right">
-                                    <form method="GET" action="{{ route('delivery-orders.index') }}">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search" name="name">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div> --}}
+                               
 
                                 <div class="clearfix mb-3"></div>
 
@@ -63,8 +53,8 @@
                                             <th>Destinasi Awal</th>
                                             <th>Destinasi Akhir</th>
                                             <th>Biaya Perjalanan</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                         @foreach ($delivery_orders as $delivery_order)
                                             <tr>
@@ -81,10 +71,30 @@
                                                  <td>
                                                     {{ $delivery_order->shipment_fee }}
                                                 </td>
-                                                <td>{{ $delivery_order->do_status }}</td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        {{ $delivery_order->do_status }}
+                                                        
+                                                        @if ($delivery_order->do_status !== 'Menunggu Persetujuan')
 
-                                                {{-- ! action button --}}
+                                                        <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="_method" value="PATCH" />
+                                                            <input type="hidden" name="do_status" value="Menunggu Persetujuan" />
+                                                            <button class="btn btn-sm btn-info btn-icon">
+                                                                <i class="fa-regular fa-square-check"></i>
+                                                                Ajukan Persetujuan
+                                                            </button>
+                                                        </form>
+                                                           
+                                                            
+                                                        @endif
+                                                        
+                                                    </div>
+                                                </td>
                                                 <td>
+                                                    @if ($delivery_order->do_status !== 'Menunggu Persetujuan')
                                                     <div class="d-flex justify-content-center">
                                                         <a href='{{ route('delivery-orders.edit', $delivery_order->id) }}'
                                                             class="btn btn-sm btn-info btn-icon">
@@ -102,10 +112,10 @@
                                                             </button>
                                                         </form>
                                                     </div>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
-
 
                                     </table>
                                 </div>

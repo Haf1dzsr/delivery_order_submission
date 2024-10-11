@@ -12,7 +12,10 @@ class DeliveryOrderController extends Controller
     
     public function index()
     {
-        $delivery_orders = DeliveryOrder::where('do_creator', 'like', '%' . request('name') . '%')->orderBy('created_at', 'desc')->paginate(10);
+        $delivery_orders = DeliveryOrder::where('do_creator', Auth::user()->email)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
         return view('pages.creator.delivery_orders.index', compact('delivery_orders'));
     }
 
@@ -30,12 +33,12 @@ class DeliveryOrderController extends Controller
         ]);
 
         DeliveryOrder::create([
-            'do_number' => 'DO-' . time(),
+            'do_number' => 'DO-' . now()->timestamp,
             'do_destination_awal' => $request->do_destination_awal,
             'do_destination_akhir' => $request->do_destination_akhir,
             'shipment_fee' => $request->shipment_fee,
             'do_status' => 'DRAFT',
-            'do_creator' => Auth::user()->name,
+            'do_creator' => Auth::user()->email,
             'do_created_date' => now(),
         ]);
 
@@ -62,6 +65,19 @@ class DeliveryOrderController extends Controller
         ]);
 
         return redirect()->route('delivery-orders.index')->with('success', 'Delivery Order updated successfully');
+    }
+
+    public function updateApprovalStatus(Request $request, DeliveryOrder $delivery_order) {
+
+        $request->validate([
+            'do_status' => 'required',
+        ]);
+
+        $delivery_order->update([
+            'do_status' => 'Menunggu Persetujuan',
+        ]);
+
+        return redirect()->route('delivery-orders.index')->with('success', 'Berhasil mengajukan pengiriman');
     }
 
     public function destroy(DeliveryOrder $delivery_order)

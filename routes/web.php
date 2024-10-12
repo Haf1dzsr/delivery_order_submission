@@ -19,10 +19,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index')->middleware(RoleHandler::class);
     Route::get('/approver', [App\Http\Controllers\Approver\DashboardController::class, 'index'])->name('approver.index');
-    Route::get('/creator', [App\Http\Controllers\Creator\DashboardController::class, 'index'])->name('creator.index');
-
-
+    Route::resource('/creator', App\Http\Controllers\Creator\DeliveryOrderController::class)->middleware(CreatorHandler::class);
+    
     Route::resource('delivery-orders', App\Http\Controllers\Creator\DeliveryOrderController::class)->middleware(CreatorHandler::class);
     Route::patch('delivery-orders/{delivery_order}/update-approval-status', [App\Http\Controllers\Creator\DeliveryOrderController::class, 'updateApprovalStatus'])->name('delivery-orders.updateApprovalStatus')->middleware(CreatorHandler::class);
-    // Route::put('delivery-orders/{id}/update-approval-status', [App\Http\Controllers\Creator\DeliveryOrderController::class, 'updateApprovalStatus'])->name('delivery-orders.updateApprovalStatus')->middleware(CreatorHandler::class);
+
 });

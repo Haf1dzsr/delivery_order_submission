@@ -14,9 +14,20 @@ return new class extends Migration
         Schema::create('delivery_orders', function (Blueprint $table) {
             $table->id();
             $table->string('do_number');
-            $table->string('do_destination_awal');
-            $table->string('do_destination_akhir');
-            $table->decimal('shipment_fee', 10, 2);
+            $table->string('do_purpose');
+            $table->string('do_origin');
+            $table->string('do_destination');
+            $table->string('origin_postal_code');
+            $table->string('destination_postal_code');
+            $table->string('item_name');
+            $table->bigInteger('item_length');
+            $table->bigInteger('item_width');
+            $table->bigInteger('item_height');
+            $table->bigInteger('item_weight');
+            $table->integer('item_qty');
+            $table->integer('item_price');
+            $table->integer('shipment_fee')->nullable();
+            $table->string('shipment_courier')->nullable();
             $table->string('do_status');
             $table->string('do_creator');
             $table->dateTime('do_created_date');

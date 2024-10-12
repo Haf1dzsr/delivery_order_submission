@@ -50,9 +50,10 @@
                                         <tr>
 
                                             <th>DO Number</th>
-                                            <th>Destinasi Awal</th>
-                                            <th>Destinasi Akhir</th>
+                                            <th>Tempat Pengambilan</th>
+                                            <th>Tempat Tujuan</th>
                                             <th>Biaya Perjalanan</th>
+                                            <th class="text-center">Kurir</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -63,14 +64,18 @@
                                                     {{ $delivery_order->do_number }}
                                                 </td>
                                                 <td>
-                                                    {{ $delivery_order->do_destination_awal }}
+                                                    {{ $delivery_order->do_origin }}
                                                 </td>
                                                 <td>
-                                                    {{ $delivery_order->do_destination_akhir }}
+                                                    {{ $delivery_order->do_destination }}
                                                 </td>
                                                  <td>
                                                     {{ $delivery_order->shipment_fee }}
                                                 </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        {{ $delivery_order->shipment_courier }}
+                                                    </div>
                                                 <td class="text-center">
                                                     <div class="d-flex flex-column justify-content-center">
                                                         {{ $delivery_order->do_status }}
@@ -96,8 +101,47 @@
                                                 <td>
                                                     @if ($delivery_order->do_status !== 'Menunggu Persetujuan')
                                                     <div class="d-flex justify-content-center">
+                                                        <button type="button" class="btn btn-sm btn-info btn-icon mr-2" data-toggle="modal" data-target="#detailModal{{ $delivery_order->id }}">
+                                                            <i class="fas fa-info"></i>
+                                                            Detail
+                                                        </button>
+                                                        <div class="modal" id="detailModal{{ $delivery_order->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $delivery_order->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="detailModalLabel{{ $delivery_order->id }}">Delivery Order Details</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p><strong>DO Number:</strong> {{ $delivery_order->do_number }}</p>
+                                                                        <p><strong>Maksud Pengiriman:</strong> {{ $delivery_order->do_purpose }}</p>
+                                                                        <p><strong>Tempat Pengambilan:</strong> {{ $delivery_order->do_origin }}</p>
+                                                                        <p><strong>Kode Pos Tempat Pengambilan:</strong> {{ $delivery_order->origin_postal_code }}</p>
+                                                                        <p><strong>Tempat Tujuan:</strong> {{ $delivery_order->do_destination }}</p>
+                                                                        <p><strong>Kode Pos Tempat Tujuan:</strong> {{ $delivery_order->destination_postal_code }}</p>
+                                                                        <p><strong>Biaya Perjalanan:</strong> {{ $delivery_order->shipment_fee }}</p>
+                                                                        <p><strong>Kurir:</strong> {{ $delivery_order->shipment_courier }}</p>
+                                                                        <p><strong>Nama Barang:</strong> {{ $delivery_order->item_name }}</p>
+                                                                        <p><strong>Deskripsi Barang:</strong> {{ $delivery_order->item_description }}</p>
+                                                                        <p><strong>Berat Barang:</strong> {{ $delivery_order->item_weight }} kg</p>
+                                                                        <p><strong>Panjang Barang:</strong> {{ $delivery_order->item_length }}</p>
+                                                                        <p><strong>Lebar Barang:</strong> {{ $delivery_order->item_width }}</p>
+                                                                        <p><strong>Tinggi Barang:</strong> {{ $delivery_order->item_height }}</p>
+                                                                        <p><strong>Jumlah Barang:</strong> {{ $delivery_order->item_qty }}</p>
+                                                                        <p><strong>DO dibuat pada:</strong> {{ $delivery_order->do_created_date }}</p>
+                                                                        <p><strong>Status:</strong> {{ $delivery_order->do_status }}</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         <a href='{{ route('delivery-orders.edit', $delivery_order->id) }}'
-                                                            class="btn btn-sm btn-info btn-icon">
+                                                            class="btn btn-sm btn-primary btn-icon">
                                                             <i class="fas fa-edit"></i>
                                                             Edit
                                                         </a>
@@ -137,4 +181,6 @@
 
     <!-- Page Specific JS File -->
     <script src="{{ asset('js/page/features-posts.js') }}"></script>
+
+    
 @endpush

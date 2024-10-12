@@ -17,6 +17,7 @@ class DeliveryOrder extends Model
         'origin_postal_code',
         'destination_postal_code',
         'item_name',
+        'item_description',
         'item_length',
         'item_width',
         'item_height',

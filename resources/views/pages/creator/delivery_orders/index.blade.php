@@ -12,6 +12,9 @@
         <section class="section">
             <div class="section-header">
                 <h1>Delivery Orders</h1>
+                <div class="section-header-button">
+                    <a href="{{ route('delivery-orders.create') }}" class="btn btn-primary">Add New</a>
+                </div>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="#">Delivery Orders</a></div>
@@ -26,7 +29,7 @@
                 </div>
                 <h2 class="section-title">Delivery Orders</h2>
                 <p class="section-lead">
-                    You can approve the Delivery Orders that creators submit.
+                    You can manage Delivery Orders, such as editing, deleting and more.
                 </p>
 
 
@@ -77,28 +80,38 @@
                                                     <div class="d-flex flex-column justify-content-center">
                                                         {{ $delivery_order->do_status }}
                                                         
-                                                        @if ($delivery_order->do_status == 'Direvisi')
+                                                        @if ($delivery_order->do_status == 'Menunggu Persetujuan')
 
                                                         <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
                                                             @csrf
                                                             @method('PATCH')
                                                             <input type="hidden" name="_method" value="PATCH" />
-                                                            <input type="hidden" name="do_status" value="Approved" />
+                                                            <input type="hidden" name="do_status" value="Menunggu Persetujuan" />
                                                             <button class="btn btn-sm btn-info btn-icon">
                                                                 <i class="fa-regular fa-square-check"></i>
-                                                                Approve
+                                                                Ajukan Persetujuan
                                                             </button>
                                                         </form>
-                                                           
-                                                            
+                                                        
+                                                        @elseif ($delivery_order->do_status == 'REVISI')
+                                                            <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="_method" value="PATCH" />
+                                                            <input type="hidden" name="do_status" value="DIREVISI" />
+                                                            <button class="btn btn-sm btn-info btn-icon">
+                                                                <i class="fa-regular fa-square-check"></i>
+                                                                Selesai Revisi
+                                                            </button>
+                                                        </form>
                                                         @endif
                                                         
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    
+                                                    @if ($delivery_order->do_status !== 'Menunggu Persetujuan')
                                                     <div class="d-flex justify-content-center">
-                                                        <button type="button" class="btn btn-sm btn-info btn-icon" data-toggle="modal" data-target="#detailModal{{ $delivery_order->id }}">
+                                                        <button type="button" class="btn btn-sm btn-info btn-icon mr-2" data-toggle="modal" data-target="#detailModal{{ $delivery_order->id }}">
                                                             <i class="fas fa-info"></i>
                                                             Detail
                                                         </button>
@@ -145,91 +158,30 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
-                                                        @if ($delivery_order->do_status !== 'REJECTED' && $delivery_order->do_status !== 'REVISI' && $delivery_order->do_status !== 'DIREVISI' && $delivery_order->do_status !== 'APPROVED')
-                                                        <button type="button" class="btn btn-sm btn-danger btn-icon ml-2" data-toggle="modal" data-target="#rejectModal{{ $delivery_order->id }}">
-                                                            <i class="fas fa-times"></i>
-                                                            Reject
-                                                        </button>
-                                                        <div class="modal" id="rejectModal{{ $delivery_order->id }}" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel{{ $delivery_order->id }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="rejectModalLabel{{ $delivery_order->id }}">Reject Delivery Order</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <form 
-                                                                    action="{{ route('approver.rejectDeliveryOrder', $delivery_order) }}"
-                                                                    method="POST">
-                                                                        @csrf
-                                                                        @method('PATCH')
-                                                                        <div class="modal-body">
-                                                                            <div class="form-group">
-                                                                                <label for="approver_reject_note">Penyebab Ditolak</label>
-                                                                                <textarea class="form-control" id="approver_reject_note" name="approver_reject_note" style="height: 100px" required></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                            <button type="submit" class="btn btn-danger">Submit</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        @endif
 
-                                                        @if ($delivery_order->do_status !== 'REVISI' && $delivery_order->do_status !== 'DIREVISI' && $delivery_order->do_status !== 'APPROVED' && $delivery_order->do_status !== 'REJECTED')
-                                                            <button type="button" class="btn btn-sm btn-warning btn-icon ml-2" data-toggle="modal" data-target="#reviseModal{{ $delivery_order->id }}">
-                                                            <i class="fas fa-pencil-alt"></i>
-                                                            Revise
-                                                            </button>
-                                                            <div class="modal" id="reviseModal{{ $delivery_order->id }}" tabindex="-1" role="dialog" aria-labelledby="reviseModalLabel{{ $delivery_order->id }}" aria-hidden="true">
-                                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="reviseModalLabel{{ $delivery_order->id }}">Revisi Delivery Order</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form 
-                                                                        action="{{ route('approver.reviseDeliveryOrder', $delivery_order) }}" 
-                                                                        method="POST">
-                                                                            @csrf
-                                                                            @method('PATCH')
-                                                                            <div class="modal-body">
-                                                                                <div class="form-group">
-                                                                                    <label for="revise_note">Penyebab Direvisi</label>
-                                                                                    <textarea class="form-control" id="revise_note" name="do_approver_revise_note" style="height: 100px" required></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                                <button type="submit" class="btn btn-warning">Submit</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        @if ($delivery_order->do_status == 'DRAFT' || $delivery_order->do_status == 'REVISI')
+                                                            <a href='{{ route('delivery-orders.edit', $delivery_order->id) }}'
+                                                                class="btn btn-sm btn-primary btn-icon">
+                                                            <i class="fas fa-edit"></i>
+                                                                Edit
+                                                            </a>
                                                         @endif
                                                         
-                                                        
-                                                        @if ($delivery_order->do_status !== 'APPROVED' && $delivery_order->do_status !== 'REJECTED')
-                                                            <form action="{{ route('approver.approveDeliveryOrder', $delivery_order) }}" method="POST" class="ml-2">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="_method" value="PATCH" />
-                                                            <input type="hidden" name="do_status" value="Approved" />
-                                                            <button class="btn btn-sm btn-info btn-icon">
-                                                                <i class="fa-regular fa-square-check"></i>
-                                                                Approve
+                                                        @if ($delivery_order->do_status == 'DRAFT' || $delivery_order->do_status == 'REJECTED')
+                                                           <form action="{{ route('delivery-orders.destroy', $delivery_order->id) }}"
+                                                            method="POST" class="ml-2">
+                                                            <input type="hidden" name="_method" value="DELETE" />
+                                                            <input type="hidden" name="_token"
+                                                                value="{{ csrf_token() }}" />
+                                                            <button class="btn btn-sm btn-danger btn-icon confirm-delete">
+                                                                <i class="fas fa-times"></i> Delete
                                                             </button>
                                                         </form>
+                                                            
                                                         @endif
+                                                        
                                                     </div>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

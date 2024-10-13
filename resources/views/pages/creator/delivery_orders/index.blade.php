@@ -80,7 +80,7 @@
                                                     <div class="d-flex flex-column justify-content-center">
                                                         {{ $delivery_order->do_status }}
                                                         
-                                                        @if ($delivery_order->do_status == 'Menunggu Persetujuan')
+                                                        @if ($delivery_order->do_status == 'DRAFT')
 
                                                         <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
                                                             @csrf

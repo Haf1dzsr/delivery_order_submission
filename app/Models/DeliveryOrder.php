@@ -34,5 +34,8 @@ class DeliveryOrder extends Model
         'do_approver_reject_note',
         'do_approver_reject_date',
         'do_approver_reject_by',
+        'do_approver_revise_note',
+        'do_approver_revise_date',
+        'do_approver_revise_by',
     ];
 }

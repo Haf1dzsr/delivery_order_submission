@@ -1,6 +1,6 @@
 @extends('layouts.app-creator')
 
-@section('title', 'Users')
+@section('title', 'Delivery Orders')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -80,7 +80,7 @@
                                                     <div class="d-flex flex-column justify-content-center">
                                                         {{ $delivery_order->do_status }}
                                                         
-                                                        @if ($delivery_order->do_status !== 'Menunggu Persetujuan')
+                                                        @if ($delivery_order->do_status == 'Menunggu Persetujuan')
 
                                                         <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
                                                             @csrf
@@ -92,8 +92,18 @@
                                                                 Ajukan Persetujuan
                                                             </button>
                                                         </form>
-                                                           
-                                                            
+                                                        
+                                                        @elseif ($delivery_order->do_status == 'REVISI')
+                                                            <form action="{{ route('delivery-orders.updateApprovalStatus', $delivery_order) }}" method="POST" class="mt-2">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="_method" value="PATCH" />
+                                                            <input type="hidden" name="do_status" value="DIREVISI" />
+                                                            <button class="btn btn-sm btn-info btn-icon">
+                                                                <i class="fa-regular fa-square-check"></i>
+                                                                Selesai Revisi
+                                                            </button>
+                                                        </form>
                                                         @endif
                                                         
                                                     </div>
@@ -131,6 +141,15 @@
                                                                         <p><strong>Tinggi Barang:</strong> {{ $delivery_order->item_height }}</p>
                                                                         <p><strong>Jumlah Barang:</strong> {{ $delivery_order->item_qty }}</p>
                                                                         <p><strong>DO dibuat pada:</strong> {{ $delivery_order->do_created_date }}</p>
+                                                                        @if ($delivery_order->do_approver_revise_date !== null)
+                                                                            <p><strong>DO direvisi pada:</strong> {{ $delivery_order->do_approver_revise_date }}</p>
+                                                                        @endif
+                                                                        @if ($delivery_order->do_approver_reject_date !== null)
+                                                                            <p><strong>DO ditolak pada:</strong> {{ $delivery_order->do_approver_reject_date }}</p>                                      
+                                                                        @endif
+                                                                        @if ($delivery_order->do_approved_date !== null)
+                                                                            <p><strong>DO disetujui pada:</strong> {{ $delivery_order->do_approved_date }}</p>                                                                          
+                                                                        @endif
                                                                         <p><strong>Status:</strong> {{ $delivery_order->do_status }}</p>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -140,13 +159,16 @@
                                                             </div>
                                                         </div>
 
-                                                        <a href='{{ route('delivery-orders.edit', $delivery_order->id) }}'
-                                                            class="btn btn-sm btn-primary btn-icon">
+                                                        @if ($delivery_order->do_status == 'DRAFT' || $delivery_order->do_status == 'REVISI')
+                                                            <a href='{{ route('delivery-orders.edit', $delivery_order->id) }}'
+                                                                class="btn btn-sm btn-primary btn-icon">
                                                             <i class="fas fa-edit"></i>
-                                                            Edit
-                                                        </a>
-
-                                                        <form action="{{ route('delivery-orders.destroy', $delivery_order->id) }}"
+                                                                Edit
+                                                            </a>
+                                                        @endif
+                                                        
+                                                        @if ($delivery_order->do_status == 'DRAFT' || $delivery_order->do_status == 'REJECTED')
+                                                           <form action="{{ route('delivery-orders.destroy', $delivery_order->id) }}"
                                                             method="POST" class="ml-2">
                                                             <input type="hidden" name="_method" value="DELETE" />
                                                             <input type="hidden" name="_token"
@@ -155,6 +177,9 @@
                                                                 <i class="fas fa-times"></i> Delete
                                                             </button>
                                                         </form>
+                                                            
+                                                        @endif
+                                                        
                                                     </div>
                                                     @endif
                                                 </td>

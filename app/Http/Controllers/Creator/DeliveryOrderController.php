@@ -122,10 +122,10 @@ class DeliveryOrderController extends Controller
         ]);
 
         $delivery_order->update([
-            'do_status' => 'Menunggu Persetujuan',
+            'do_status' => $request->do_status,
         ]);
 
-        return redirect()->route('delivery-orders.index')->with('success', 'Berhasil mengajukan pengiriman');
+        return redirect()->route('delivery-orders.index')->with('success', $request->do_status == 'DRAFT' ? 'Berhasil mengajukan delivery order' : 'Berhasil merevisi data delivery order');
     }
 
     public function destroy(DeliveryOrder $delivery_order)

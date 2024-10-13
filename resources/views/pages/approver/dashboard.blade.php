@@ -217,7 +217,7 @@
                                                         @endif
                                                         
                                                         
-                                                        @if ($delivery_order->do_status !== 'APPROVED' && $delivery_order->do_status !== 'REJECTED')
+                                                        @if ($delivery_order->do_status !== 'APPROVED' && $delivery_order->do_status !== 'REJECTED' && $delivery_order->do_status !== 'REVISI')
                                                             <form action="{{ route('approver.approveDeliveryOrder', $delivery_order) }}" method="POST" class="ml-2">
                                                             @csrf
                                                             @method('PATCH')

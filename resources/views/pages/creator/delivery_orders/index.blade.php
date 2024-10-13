@@ -103,7 +103,47 @@
                                                                 <i class="fa-regular fa-square-check"></i>
                                                                 Selesai Revisi
                                                             </button>
+                                                            </form>
+
+                                                            <div class="d-flex justify-content-center">
+                                                                <button type="button" class="btn btn-sm btn-warning btn-icon mt-2" data-toggle="modal" data-target="#detailModal{{ $delivery_order->id }}">
+                                                                    <i class="fas fa-info"></i>
+                                                                    Lihat Catatan Revisi
+                                                                </button>
+                                                                <div class="modal" id="detailModal{{ $delivery_order->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $delivery_order->id }}" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="detailModalLabel{{ $delivery_order->id }}">Delivery Order Details</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p><strong>{{ $delivery_order->do_approver_revise_note }}</strong></p>
+                                                                                
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @if ($delivery_order->do_status == 'DRAFT' || $delivery_order->do_status == 'REJECTED')
+                                                           <form action="{{ route('delivery-orders.destroy', $delivery_order->id) }}"
+                                                            method="POST" class="ml-2">
+                                                            <input type="hidden" name="_method" value="DELETE" />
+                                                            <input type="hidden" name="_token"
+                                                                value="{{ csrf_token() }}" />
+                                                            <button class="btn btn-sm btn-danger btn-icon confirm-delete">
+                                                                <i class="fas fa-times"></i> Delete
+                                                            </button>
                                                         </form>
+                                                            
+                                                        @endif
+                                                        
+                                                    </div>
                                                         @endif
                                                         
                                                     </div>
